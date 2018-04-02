@@ -29,7 +29,7 @@ const Bull = {
         },
 
         parseRoutes: function () {
-            const routes = Bull.serializer.load(`${Bull.root}\\config\\routing.yml`).routes;
+            const routes = Bull.serializer.load(__dirname + `config/routing.yml`).routes;
             for(let route in routes) {
                 route = routes[route];
                 this.defineRoute(route.path, route.controller, route.methods);
