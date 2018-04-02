@@ -1,0 +1,14 @@
+{
+  "name": "gorilla",
+  "version": "1.0.0",
+  "description": "NodeJS web framework",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cosmin Stoica",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
