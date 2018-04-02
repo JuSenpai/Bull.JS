@@ -14,11 +14,6 @@ const Bull = {
         app.listen(3000, "0.0.0.0", () => console.log("Server listening..."));
     },
 
-    setRootFolder(root) {
-        this.root = root;
-        this.init();
-    },
-
     router: {
         routes: {},
         defineRoute: function (route, controller, methods = ["GET"]) {
