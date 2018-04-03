@@ -1,3 +1,5 @@
+const YAML = require("yamljs");
+
 module.exports = function (Bull) {
     return {
         routes: {},
@@ -14,7 +16,7 @@ module.exports = function (Bull) {
         },
 
         parseRoutes: function (routingFile) {
-            const routes = Bull.serializer.load(routingFile).routes;
+            const routes = YAML.load(routingFile).routes;
             for (let route in routes) {
                 route = routes[route];
                 this.defineRoute(route.path, route.controller, route.methods);
