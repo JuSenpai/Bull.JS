@@ -6,52 +6,31 @@ const Bull = {
     host: null,
     port: null,
     serializer: YAML,
-    start: function () {
+    start: function (configPath) {
         let config = {};
         try {
-            this.router.parseRoutes();
-            config = this.configurator.getFrameworkConfig();
+            config = this.configurator.getFrameworkConfig(configPath || `config\\config.yml`);
+            (config.includes.routing || [`config\\routing.yml`]).forEach(routingFile => {
+                this.router.parseRoutes(routingFile);
+            });
         } catch(e) {
-            console.log(e);
+            console.error(e.message);
         }
 
         if (!config.port) {
             console.error("%root%/config/config.yml does not contain the port setting.");
         } else {
-            app.listen(config.port, config.host || "0.0.0.0", () => console.log(`Server started on ${config.host}:${config.port}`));
+            app.listen(config.port, config.host || "0.0.0.0", () => console.log(`Server started on ${config.host || "0.0.0.0"}:${config.port}`));
         }
     },
 
-    router: {
-        routes: {},
-        defineRoute: function (route, controller, methods = ["GET"]) {
-            const controllerClass = controller.split(":")[0];
-            const controllerMethod = controller.split(":")[1];
-            this.routes[route] = methods;
-            methods.forEach(method => {
-                app[method.toLowerCase()](route, (req, res) => {
-                    controller = require(`../../src/controller/${controllerClass}`);
-                    res.send(controller[`${controllerMethod}Action`](req, req.params));
-                });
-            });
-        },
-
-        parseRoutes: function () {
-            const routes = Bull.serializer.load(`config\\routing.yml`).routes;
-            for(let route in routes) {
-                route = routes[route];
-                this.defineRoute(route.path, route.controller, route.methods);
-            }
-
-            return this.routes;
-        }
-    },
+    router: require("./toolkit/routing")(this),
 
     configurator: {
         config: null,
 
-        getFrameworkConfig() {
-            this.config = Bull.serializer.load(`config\\config.yml`).config;
+        getFrameworkConfig(path) {
+            this.config = Bull.serializer.load(path).config;
             return this.config;
         }
     }
