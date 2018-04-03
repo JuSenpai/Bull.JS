@@ -3,15 +3,23 @@ const app = express();
 const YAML = require('yamljs');
 
 const Bull = {
+    host: null,
+    port: null,
     serializer: YAML,
-    init: function () {
+    start: function () {
+        let config = {};
         try {
             this.router.parseRoutes();
+            config = this.configurator.getFrameworkConfig();
         } catch(e) {
-            return;
+            console.log(e);
         }
 
-        app.listen(3000, "0.0.0.0", () => console.log("Server listening..."));
+        if (!config.port) {
+            console.error("%root%/config/config.yml does not contain the port setting.");
+        } else {
+            app.listen(config.port, config.host || "0.0.0.0", () => console.log(`Server started on ${config.host}:${config.port}`));
+        }
     },
 
     router: {
@@ -22,14 +30,14 @@ const Bull = {
             this.routes[route] = methods;
             methods.forEach(method => {
                 app[method.toLowerCase()](route, (req, res) => {
-                    controller = require(`/src/controller/${controllerClass}`);
-                    controller[`${controllerMethod}`](req, res, req.params);
+                    controller = require(`../../src/controller/${controllerClass}`);
+                    res.send(controller[`${controllerMethod}Action`](req, req.params));
                 });
             });
         },
 
         parseRoutes: function () {
-            const routes = Bull.serializer.load(__dirname + `config/routing.yml`).routes;
+            const routes = Bull.serializer.load(`config\\routing.yml`).routes;
             for(let route in routes) {
                 route = routes[route];
                 this.defineRoute(route.path, route.controller, route.methods);
@@ -37,9 +45,16 @@ const Bull = {
 
             return this.routes;
         }
+    },
+
+    configurator: {
+        config: null,
+
+        getFrameworkConfig() {
+            this.config = Bull.serializer.load(`config\\config.yml`).config;
+            return this.config;
+        }
     }
 };
-
-Bull.init();
 
 module.exports = Bull;
