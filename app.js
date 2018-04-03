@@ -5,13 +5,13 @@ const YAML = require('yamljs');
 const Bull = {
     host: null,
     port: null,
-    serializer: YAML,
+
     start: function (configPath) {
         let config = {};
         try {
             config = this.configurator.getFrameworkConfig(configPath || `config\\config.yml`);
-            (config.includes.routing || [`config\\routing.yml`]).forEach(routingFile => {
-                this.router.parseRoutes(routingFile);
+            (config.includes.routing || [{path: `config\\routing.yml`}]).forEach(routingFile => {
+                this.router.parseRoutes(routingFile.path, routingFile.prefix || "");
             });
         } catch(e) {
             console.error(e.message);
@@ -24,13 +24,13 @@ const Bull = {
         }
     },
 
-    router: require("./toolkit/routing")(this),
+    router: require("./toolkit/routing")(app),
 
     configurator: {
         config: null,
 
         getFrameworkConfig(path) {
-            this.config = Bull.serializer.load(path).config;
+            this.config = YAML.load(path).config;
             return this.config;
         }
     }

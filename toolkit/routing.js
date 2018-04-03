@@ -1,6 +1,6 @@
 const YAML = require("yamljs");
 
-module.exports = function (Bull) {
+module.exports = function (app) {
     return {
         routes: {},
         defineRoute: function (route, controller, methods = ["GET"]) {
@@ -9,20 +9,20 @@ module.exports = function (Bull) {
             this.routes[route] = methods;
             methods.forEach(method => {
                 app[method.toLowerCase()](route, (req, res) => {
-                    controller = require(`../../src/controller/${controllerClass}`);
+                    controller = require(`../../../src/controller/${controllerClass}`);
                     res.send(controller[`${controllerMethod}Action`](req, req.params));
                 });
             });
         },
 
-        parseRoutes: function (routingFile) {
+        parseRoutes: function (routingFile, prefix) {
             const routes = YAML.load(routingFile).routes;
             for (let route in routes) {
                 route = routes[route];
-                this.defineRoute(route.path, route.controller, route.methods);
+                this.defineRoute(prefix + route.path, route.controller, route.methods);
             }
 
             return this.routes;
         }
     };
-}
+};
