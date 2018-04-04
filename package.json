@@ -1,9 +1,9 @@
 {
-  "name": "bull.js",
+  "name": "HyenaJS",
   "version": "1.1.0",
   "description": "NodeJS web framework",
   "main": "app.js",
-  "repository": "https://github.com/JuSenpai/Bull.JS",
+  "repository": "https://github.com/JuSenpai/HyenaJS",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
