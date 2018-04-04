@@ -2,18 +2,26 @@ const express = require("express");
 const app = express();
 const YAML = require('yamljs');
 
-const Bull = {
+const Hyena = {
     host: null,
     port: null,
 
-    start: function (configPath) {
+    start: function (configPath = `config\\config.yml`) {
         let config = {};
         try {
-            config = this.configurator.getFrameworkConfig(configPath || `config\\config.yml`);
+            config = this.configurator.getFrameworkConfig(configPath);
+            if (config.templating) {
+                if (config.templating.engine.toLowerCase() === "hyena") {
+                    app.engine('hyena', require("./toolkit/templating"));
+                }
+                app.set('views', config.templating.views.root);
+                app.set('view engine', config.templating.engine.toLowerCase());
+            }
+
             (config.includes.routing || [{path: `config\\routing.yml`}]).forEach(routingFile => {
                 this.router.parseRoutes(routingFile.path, routingFile.prefix || "");
             });
-        } catch(e) {
+        } catch (e) {
             console.error(e.message);
         }
 
@@ -36,4 +44,4 @@ const Bull = {
     }
 };
 
-module.exports = Bull;
+module.exports = Hyena;
