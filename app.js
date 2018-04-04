@@ -32,7 +32,7 @@ const Hyena = {
         }
     },
 
-    router: require("./toolkit/routing")(app),
+    router: require("./toolkit/routing")(app, this.configurator.config),
 
     configurator: {
         config: null,

@@ -3,7 +3,7 @@ const Response = require("../Http/Response");
 const JsonResponse = require("../Http/JsonResponse");
 const TemplateResponse = require("../Http/TemplateResponse");
 
-module.exports = function (app) {
+module.exports = function (app, config) {
     return {
         routes: {},
         defineRoute: function (route, controller, methods = ["GET"]) {
@@ -23,7 +23,7 @@ module.exports = function (app) {
 
                         case response instanceof TemplateResponse:
                             res.setHeader("Content-Type", "text/html");
-                            res.render(response.path, response.params);
+                            res.render(response.path, Object.assign({}, response.params, config.templating.globals));
                             break;
 
                         case response instanceof Response:
