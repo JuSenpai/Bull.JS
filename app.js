@@ -6,14 +6,18 @@ const Hyena = {
     host: null,
     port: null,
 
-    start: function (configPath = `config\\config.yml`) {
-        let config = {};
+    init: function (configPath = `config\\config.yml`) {
         try {
-            config = this.configurator.getFrameworkConfig(configPath);
+            this.configurator.getFrameworkConfig(configPath);
+        } catch(e) {
+            console.error(e.message);
+        }
+    },
+
+    start: function () {
+        let config = this.configurator.config;
+        try {
             if (config.templating) {
-                if (config.templating.engine.toLowerCase() === "hyena") {
-                    app.engine('hyena', require("./toolkit/templating"));
-                }
                 app.set('views', config.templating.views.root);
                 app.set('view engine', config.templating.engine.toLowerCase());
             }
@@ -32,7 +36,7 @@ const Hyena = {
         }
     },
 
-    router: require("./toolkit/routing")(app, Hyena.configurator.config),
+    router: null,
 
     configurator: {
         config: null,
@@ -43,5 +47,8 @@ const Hyena = {
         }
     }
 };
+
+Hyena.init();
+Hyena.router = require("./toolkit/routing")(app, Hyena.configurator.config);
 
 module.exports = Hyena;
