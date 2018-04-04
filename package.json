@@ -1,5 +1,5 @@
 {
-  "name": "Hyena.JS",
+  "name": "hyenajs",
   "version": "1.1.2",
   "description": "NodeJS web framework",
   "main": "app.js",
