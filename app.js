@@ -9,6 +9,8 @@ const Hyena = {
     init: function (configPath = `config\\config.yml`) {
         try {
             this.configurator.getFrameworkConfig(configPath);
+            this.router = require("./toolkit/routing")(app, this.configurator.config);
+            this.start();
         } catch(e) {
             console.error(e.message);
         }
@@ -47,8 +49,5 @@ const Hyena = {
         }
     }
 };
-
-Hyena.init();
-Hyena.router = require("./toolkit/routing")(app, Hyena.configurator.config);
 
 module.exports = Hyena;

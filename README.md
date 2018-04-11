@@ -16,7 +16,7 @@ const Hyena = require("hyenajs");
 
 // ... additional code 
 
-Hyena.start();  // run the app
+Hyena.init();  // run the app
 ```
 
 
@@ -24,10 +24,10 @@ Hyena.start();  // run the app
 ---
 The framework has a configuration file, located by default under the `config/config.yml` file.
 
-However, you may change this file if you wish, simply by passing an argument to the **start()** function like below:
+However, you may change this file if you wish, simply by passing an argument to the **init()** function like below:
 
 ```javascript
-Hyena.start("/path/to/file.yml");
+Hyena.init("/path/to/file.yml");
 ```
 
 An example of what this file **should** contain:
