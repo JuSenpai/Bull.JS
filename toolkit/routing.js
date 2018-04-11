@@ -25,7 +25,7 @@ module.exports = function (app, config) {
 
                         case response instanceof TemplateResponse:
                             res.setHeader("Content-Type", "text/html");
-                            if (config.engine) {
+                            if (config.templating.engine) {
                                 res.render(response.path, Object.assign({}, response.params, config.templating.globals));
                             } else {
                                 let string = `${controllerClass}::${controllerMethod}Action(): you tried to render a template, but no engine was specified in the config file.`;
