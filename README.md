@@ -36,15 +36,20 @@ config:
     port: 3001
 
     templating:
-        engine: twig 		# also works with jade, from what i've tested
+        # also works with jade (minimally as we encourage the usage of twig), from what i've tested
+        engine: twig 		
         views:
-            root: src/template		# my personal choice; customize as you wish
+            # my personal choice; customize as you wish
+            root: src/template	
         globals:
-            hello: world	# globals sent to the templates
+            # global template variables
+            hello: world	
 
     includes:
-        routing: # if nothing is specified here, it looks for config/routing.yml file
-            - { path: config/routing.yml, prefix: /hello }	# prefix is optional
+        routing: 
+            # if nothing is specified here, it looks for config/routing.yml file
+            # prefix is optional
+            - { path: config/routing.yml, prefix: /hello }	
 ```
 
 ### Routing
@@ -57,12 +62,15 @@ An example of a routing file:
 routes:
     index:
         path: /index
-        controller: Hello:main	# mainAction method inside the Hello class
-        methods: [GET, POST]	# defaults to [GET] if not mentioned
+        # mainAction method inside the Hello class
+        controller: Hello:main
+        # defaults to [GET] if not mentioned
+        methods: [GET, POST]	
 	
 	user.id:
 		path: /user/:id
-		controller: User:getById	# references method getByIdAction inside User class
+		# references method getByIdAction inside User class
+		controller: User:getById
 		# defaults to [GET] method
 ```
 
