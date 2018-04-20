@@ -9,6 +9,10 @@ const Hyena = {
     init: function (configPath = `config\\config.yml`) {
         try {
             this.configurator.getFrameworkConfig(configPath);
+            if (this.configurator.config.translations.enabled) {
+                this.translator = require("./toolkit/translator")(this.configurator.config);
+                this.translator.load();
+            }
             this.router = require("./toolkit/routing")(app, this.configurator.config);
             this.start();
         } catch(e) {
@@ -39,6 +43,7 @@ const Hyena = {
     },
 
     router: null,
+    translator: null,
 
     configurator: {
         config: null,
@@ -47,6 +52,18 @@ const Hyena = {
             this.config = YAML.load(path).config;
             return this.config;
         }
+    }
+};
+
+require("./toolkit/twig");
+
+global.Hyena = {
+    getConfig: function () {
+        return Hyena.configurator.config;
+    },
+
+    getTranslator: function () {
+        return Hyena.translator;
     }
 };
 
