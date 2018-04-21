@@ -114,7 +114,7 @@ To enable this feature you have to do one thing:
 * add the following to your **config.yml** under the **config** key:
 	
 	
-```
+```yaml
 translations:
 	enabled: true
 	# root can be any directory; required otherwise translations will be disabled
@@ -123,7 +123,7 @@ translations:
 
 To specify a global locale to the app you can add the **locale** key **directly** unde the **config** key.
 
-```
+```yaml
 config:
 	locale: en
 ```
@@ -134,7 +134,7 @@ The translation system will then look inside **EVERY** translation folder and pa
 
 **Example of TranslationFile.yml**
 
-```
+```yaml
 # config/translations/en/TranslationFile.yml
 translations:
 	hello_message: Hello, world!
@@ -146,14 +146,14 @@ Yes, it accepts parameters just like in the above example. When translating that
 #### Using translations inside templates
 This can be easily achieved using the custom **twig** filter called **translate**.
 
-```
+```twig
 <h1>{{ 'hello_message'|translate }}</h1>
 ```
 
 This will render the message having the **hello_message** key **in the globally specified locale.**
 
 You can, however, override this and render the message using a different locale by passing a parameter to the filter.
-```
+```twig
 <h1>{{ 'hello_message'|translate('fr') }}</h1>
 ```
 
@@ -161,12 +161,12 @@ This will render the **hello_message** in **french** (if the **fr** folder exist
 
 You can also pass parameters to the translation if the message requires it:
 
-```
+```twig
 <h1>{{ 'hello_user'|translate({user: 'JuSenpai'}) }}</h1>
 ```
 
 The combination of the above actions works as well:
-```
+```twig
 <h1>{{ 'hello_user'|translate({user: 'JuSenpai'}, 'fr') }}</h1>
 ```
 
