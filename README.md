@@ -105,10 +105,74 @@ The **params** parameter contains the parameters passed via url or sent from a r
 **Returning anything else but one of the three function calls will result in an error.**
 
 
+### Translations
+---
 
+If your web application is supposed to handle multiple languages, you may want to use this feature. HyenaJS comes with a translation system included.
 
+To enable this feature you have to do one thing:
+* add the following to your **config.yml** under the **config** key:
+	
+	
+```
+translations:
+	enabled: true
+	# root can be any directory; required otherwise translations will be disabled
+	root: config/translations
+```
 
+To specify a global locale to the app you can add the **locale** key **directly** unde the **config** key.
 
+```
+config:
+	locale: en
+```
+
+#### How does it work?
+The translation system looks inside the root directory specified and interprets every child directory as a **locale.** Basically, if you set the app locale to **apple** and you have an **apple/** directory inside your translations root, it will be perfectly valid.
+The translation system will then look inside **EVERY** translation folder and parse every **.yml** file it encounters. The **.yml** files here should **key-value** pairs containing translations.
+
+**Example of TranslationFile.yml**
+
+```
+# config/translations/en/TranslationFile.yml
+translations:
+	hello_message: Hello, world!
+	hello_user: Hello, :user!
+```
+
+Yes, it accepts parameters just like in the above example. When translating that specific message, you can specify the **user** attribute in order to replace it. If none is specified, the **:user** text will be shown.
+
+#### Using translations inside templates
+This can be easily achieved using the custom **twig** filter called **translate**.
+
+```
+<h1>{{ 'hello_message'|translate }}</h1>
+```
+
+This will render the message having the **hello_message** key **in the globally specified locale.**
+
+You can, however, override this and render the message using a different locale by passing a parameter to the filter.
+```
+<h1>{{ 'hello_message'|translate('fr') }}</h1>
+```
+
+This will render the **hello_message** in **french** (if the **fr** folder exists under the translations root).
+
+You can also pass parameters to the translation if the message requires it:
+
+```
+<h1>{{ 'hello_user'|translate({user: 'JuSenpai'}) }}</h1>
+```
+
+The combination of the above actions works as well:
+```
+<h1>{{ 'hello_user'|translate({user: 'JuSenpai'}, 'fr') }}</h1>
+```
+
+This will pass the parameters to the message and also render it in the desired locale.
+
+#### An important note: This feature is currently only supported in Twig templating language (sorry jade fans)
 
 
 
