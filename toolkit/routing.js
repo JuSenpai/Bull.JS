@@ -13,6 +13,14 @@ module.exports = function (app, config) {
             this.routes[route] = methods;
             methods.forEach(method => {
                 app[method.toLowerCase()](route, (req, res) => {
+                    if (req.files && config.uploads) {
+                        if (config.uploads.destination) {
+                            for (let file in req.files) {
+                                file = req.files[file];
+                                file.mv((config.uploads.root || "uploads") + "/" + file.name);
+                            }
+                        }
+                    }
                     controller = this.controllers[controllerClass] || require(`../../../src/controller/${controllerClass}`);
                     this.controllers[controllerClass] = controller;
                     const response = controller[`${controllerMethod}Action`](req, req.params);
