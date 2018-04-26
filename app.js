@@ -1,21 +1,32 @@
 const express = require("express");
 const app = express();
 const YAML = require('yamljs');
+const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 
 const Hyena = {
     host: null,
     port: null,
 
     init: function (configPath = `config\\config.yml`) {
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({extended: true}));
+        app.use(fileUpload());
         try {
             this.configurator.getFrameworkConfig(configPath);
-            if (this.configurator.config.translations.enabled) {
+            if (this.configurator.config.translations) {
                 this.translator = require("./toolkit/translator")(this.configurator.config);
                 this.translator.load();
             }
             this.router = require("./toolkit/routing")(app, this.configurator.config);
+
+            if (this.configurator.config.uploads) {
+                if (!this.configurator.config.uploads.destination) {
+                    console.warn("You have not specified a root for uploaded files. Assuming 'uploads/'");
+                }
+            }
             this.start();
-        } catch(e) {
+        } catch (e) {
             console.error(e.message);
         }
     },

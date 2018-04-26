@@ -5,6 +5,10 @@ module.exports = function (config) {
     return {
         translations: {},
         load: function () {
+            if (!config.translations.root) {
+                console.error("Apparently, you enabled translations but did not set a root folder. Assuming `config/translations`.");
+                config.translations.root = "config/translations";
+            }
             const folders = system.readdirSync(config.translations.root);
             folders.forEach(folder => {
                 system.readdir(config.translations.root + "/" + folder, (err, contents) => {
@@ -22,12 +26,16 @@ module.exports = function (config) {
         },
 
         translate: function (mask, locale, params = {}) {
-            let translation = this.translations[locale][mask];
-            for (let param in params) {
-                translation = translation.replace(new RegExp(`:${param}`), params[param]);
-            }
+            if (!(locale in this.translations)) {
+                throw `Locale "${locale}" is not defined. Please create a folder with the locale name under ${config.translations.root}.`;
+            } else {
+                let translation = this.translations[locale][mask];
+                for (let param in params) {
+                    translation = translation.replace(new RegExp(`:${param}`), params[param]);
+                }
 
-            return translation;
+                return translation;
+            }
         }
     };
 };
