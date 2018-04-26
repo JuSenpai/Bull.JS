@@ -113,20 +113,15 @@ If your web application is supposed to handle multiple languages, you may want t
 To enable this feature you have to do one thing:
 * add the following to your **config.yml** under the **config** key:
 	
-	
 ```yaml
 translations:
-	enabled: true
+	locale: en
 	# root can be any directory; required otherwise translations will be disabled
 	root: config/translations
 ```
 
-To specify a global locale to the app you can add the **locale** key **directly** unde the **config** key.
-
-```yaml
-config:
-	locale: en
-```
+As you can see, to specify a global locale to the app you can add the **locale** key under the **translations** key.
+As long as a **translations** key exists, the system will try to enable the translations (unless no locales are found).
 
 #### How does it work?
 The translation system looks inside the root directory specified and interprets every child directory as a **locale.** Basically, if you set the app locale to **apple** and you have an **apple/** directory inside your translations root, it will be perfectly valid.
