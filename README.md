@@ -1,3 +1,6 @@
+This repository is not in active development. I, however, tend to respond to messages, so feel free to contact me if you need any assistance.
+---
+
 # HyenaJS
 HyenaJS is a web framework that works over Express and is **highly** inspired by PHP's Symfony.
 
